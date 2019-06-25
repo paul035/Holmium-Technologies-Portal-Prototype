@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Holmium Technologies</string>
+
+    <string name="info">Holmium Technologies was founded in 2018 by a team of experts from NITs. We are indulged in developing embedded IoT solutions using cutting edge technology to ensure highest reliability. We have expertise in solar industries, electronics industries and IT industries. Our mission is to design a sustainable and economical solution for Remote monitoring and SCADA solution for solar power plant. But we have not limited to just solar power plant instead we have expertise and talent to design embedded, IoT solutions for any kind of industrial problem</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>

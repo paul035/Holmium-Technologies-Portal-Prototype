@@ -44,7 +44,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class DashboardFragment extends Fragment{
-    private Timer myTimer;
+
     private TextView todayGen;
     private TextView totalGen;
     private TextView acPower;
@@ -98,14 +98,6 @@ public class DashboardFragment extends Fragment{
         rules1 = new HIRules();
 
         runMethod();
-
-        /*myTimer = new Timer();
-        myTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //new AsyncRetrieve("101", getContext()).execute();
-            }
-        }, 10000, 1000);*/
 
         return view;
     }

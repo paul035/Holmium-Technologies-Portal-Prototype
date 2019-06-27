@@ -48,7 +48,6 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
         myViewModel.sendData3(newData3);
         myViewModel.sendData4(newData4);
 
-
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,13 +55,11 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         loginEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.loginEmail);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String logEmail = sharedPreferences.getString("loginEmail", "");
         loginEmail.setText(logEmail);
-
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,9 +94,11 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
             case R.id.nav_share:
                 Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.nav_send:
                 Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.nav_logout:
                 Logout();
         }

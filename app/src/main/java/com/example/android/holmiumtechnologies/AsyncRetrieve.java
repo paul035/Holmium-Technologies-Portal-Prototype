@@ -30,36 +30,31 @@ import static com.example.android.holmiumtechnologies.MainActivity.CONNECTION_TI
 import static com.example.android.holmiumtechnologies.MainActivity.READ_TIMEOUT;
 
 
-public class AsyncRetrieve extends AsyncTask<String, String, String>{
+public class AsyncRetrieve extends AsyncTask <String, String, String> {
 
     private Context context;
     private String plantNumber;
+    private HttpURLConnection conn;
+    private URL url = null;
 
-
-    public AsyncRetrieve(String plantNumber, Context context){
+    public AsyncRetrieve(String plantNumber, Context context) {
         this.plantNumber = plantNumber;
         this.context = context;
 
     }
 
-    // ProgressDialog pdLoading = new ProgressDialog();
-    HttpURLConnection conn;
-    URL url = null;
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // This method will be running on UI thread
-       /* pdLoading.setMessage("\tPlant details are loading...");
-        pdLoading.setCancelable(false);
-        pdLoading.show();*/
 
+        // This method will be running on UI thread
     }
 
     @Override
     protected String doInBackground(String... params) {
         try {
             // Enter URL address where your php file resides
+
             url = new URL("http://10.0.2.2/webapp/data.plant_no.json.php");
 
         } catch (MalformedURLException e) {
@@ -69,24 +64,30 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
         }
         try {
             // Setup HttpURLConnection class to send and receive data from php and mysql
+
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(READ_TIMEOUT);
             conn.setConnectTimeout(CONNECTION_TIMEOUT);
             conn.setRequestMethod("POST");
 
             // setDoInput and setDoOutput method depict handling of both send and receive
+
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
             // Append parameters to URL
+
             Uri.Builder builder = new Uri.Builder()
                     .appendQueryParameter("plant_no", plantNumber);
             String query = builder.build().getEncodedQuery();
 
-            // Log.d("Plant Detail", query);
             // query contains the plantNumber
 
+            Log.d("Plant Detail", query);
+
+
             // Open connection for sending data
+
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
@@ -109,9 +110,11 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
             int response_code = conn.getResponseCode();
 
             // Check if successful connection made
+
             if (response_code == HttpURLConnection.HTTP_OK) {
 
                 // Read data sent from server
+
                 InputStream input = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                 StringBuilder result = new StringBuilder();
@@ -121,13 +124,13 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
                     result.append(line);
                 }
 
-                  Log.d("Updated Data", String.valueOf(result));
+                Log.d("Updated Data", String.valueOf(result));
+
                 // result contain the plant details each and every data
 
                 // Pass data to onPostExecute method
 
                 return (result.toString());
-
 
             } else {
 
@@ -144,16 +147,15 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
 
     @Override
     protected void onPostExecute(String result) {
+
         // This method will be running on UI thread
 
-        // pdLoading.dismiss();
-
         if (result != null) {
-                    String data1="";
-                    String data2="";
-                    String data3="";
-                    String data4="";
-                    String data5="";
+            String data1 = "";
+            String data2 = "";
+            String data3 = "";
+            String data4 = "";
+            String data5 = "";
 
             try {
                 JSONArray jArray = new JSONArray(result);
@@ -178,7 +180,9 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
             intent.putExtra("data5", data5);
             context.startActivity(intent);
 
-           // Log.d("Data", result);
+            // result contain details about plant
+
+            Log.d("Data", result);
 
         }
     }

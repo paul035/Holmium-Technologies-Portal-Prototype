@@ -23,6 +23,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.example.android.holmiumtechnologies.MainActivity.CONNECTION_TIMEOUT;
 import static com.example.android.holmiumtechnologies.MainActivity.READ_TIMEOUT;
@@ -33,19 +35,21 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
     private Context context;
     private String plantNumber;
 
+
     public AsyncRetrieve(String plantNumber, Context context){
         this.plantNumber = plantNumber;
         this.context = context;
+
     }
 
-    //ProgressDialog pdLoading = new ProgressDialog();
+    // ProgressDialog pdLoading = new ProgressDialog();
     HttpURLConnection conn;
     URL url = null;
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //this method will be running on UI thread
+        // This method will be running on UI thread
        /* pdLoading.setMessage("\tPlant details are loading...");
         pdLoading.setCancelable(false);
         pdLoading.show();*/
@@ -79,7 +83,7 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
                     .appendQueryParameter("plant_no", plantNumber);
             String query = builder.build().getEncodedQuery();
 
-            //Log.d("Plant Detail", query);
+            // Log.d("Plant Detail", query);
             // query contains the plantNumber
 
             // Open connection for sending data
@@ -117,8 +121,8 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
                     result.append(line);
                 }
 
-                //  Log.d("Data", String.valueOf(result));
-                // result contain the plant details each and every datas
+                  Log.d("Updated Data", String.valueOf(result));
+                // result contain the plant details each and every data
 
                 // Pass data to onPostExecute method
 
@@ -140,9 +144,9 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
 
     @Override
     protected void onPostExecute(String result) {
-        //this method will be running on UI thread
+        // This method will be running on UI thread
 
-        //pdLoading.dismiss();
+        // pdLoading.dismiss();
 
         if (result != null) {
                     String data1="";
@@ -155,7 +159,6 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
                 JSONArray jArray = new JSONArray(result);
                 for (int i = 0; i < jArray.length(); i++) {
                     JSONObject json_data = jArray.getJSONObject(i);
-                    //PlantDetail plantDetail = new PlantDetail();
                     data1 = json_data.getString("data1");
                     data2 = json_data.getString("data2");
                     data3 = json_data.getString("data3");
@@ -167,6 +170,7 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
             }
 
             Intent intent = new Intent(context, GraphActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("data1", data1);
             intent.putExtra("data2", data2);
             intent.putExtra("data3", data3);
@@ -174,10 +178,8 @@ public class AsyncRetrieve extends AsyncTask<String, String, String>{
             intent.putExtra("data5", data5);
             context.startActivity(intent);
 
-           // Log.d("Data: ", result);
+           // Log.d("Data", result);
 
         }
-
     }
-
 }

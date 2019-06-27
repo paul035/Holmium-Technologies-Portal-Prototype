@@ -6,10 +6,12 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,8 +40,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DashboardFragment extends Fragment{
+    private Timer myTimer;
     private TextView todayGen;
     private TextView totalGen;
     private TextView acPower;
@@ -61,9 +66,7 @@ public class DashboardFragment extends Fragment{
     private String newData3;
     private String newData4;
 
-
     MYViewModel myViewModel;
-
 
     @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +96,21 @@ public class DashboardFragment extends Fragment{
         responsive = new HIResponsive();
 
         rules1 = new HIRules();
+
+        runMethod();
+
+        /*myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //new AsyncRetrieve("101", getContext()).execute();
+            }
+        }, 10000, 1000);*/
+
+        return view;
+    }
+
+    private void runMethod() {
 
         myViewModel = ViewModelProviders.of(getActivity()).get(MYViewModel.class);
         myViewModel.getData1().observe(this, new Observer <String>() {
@@ -127,9 +145,8 @@ public class DashboardFragment extends Fragment{
                 DrawBarGraph(newData1, newData2, newData3, newData4);
             }
         });
-
-        return view;
     }
+
 
     private void DrawNewGraph(String a, String b, String c, String d) {
         title.setText("Plant: Line Chart Detail");
@@ -144,12 +161,10 @@ public class DashboardFragment extends Fragment{
             add(yaxis);
         }});
 
-
         legend.setLayout("vertical");
         legend.setAlign("right");
         legend.setVerticalAlign("middle");
         options.setLegend(legend);
-
 
         plotoptions.setSeries(new HISeries());
         plotoptions.getSeries().setLabel(new HILabel());

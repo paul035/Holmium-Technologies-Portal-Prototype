@@ -3,7 +3,12 @@ package com.example.android.holmiumtechnologies;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -13,18 +18,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GraphActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private View header;
+    private TextView loginEmail;
     MYViewModel myViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-
 
         Intent intent = getIntent();
         String newData1 = intent.getStringExtra("data1");
@@ -47,12 +56,20 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        loginEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.loginEmail);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String logEmail = sharedPreferences.getString("loginEmail", "");
+        loginEmail.setText(logEmail);
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new DashboardFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_dashboard);
@@ -61,7 +78,7 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_message:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MessageFragment()).commit();
@@ -92,17 +109,17 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
 
     private void Logout() {
         Intent intent = new Intent(GraphActivity.this, MainActivity.class);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         finish();
+        startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
 }
-

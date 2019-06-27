@@ -1,8 +1,11 @@
 package com.example.android.holmiumtechnologies;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,9 +22,14 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-
+    private String first = null, second = null;
+    private Timer myTimer;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
     private EditText etEmail;
@@ -45,7 +53,13 @@ public class MainActivity extends AppCompatActivity {
         final String email = etEmail.getText().toString();
         final String password = etPassword.getText().toString();
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
+        editor.putString("loginEmail", email);
+        editor.commit();
+
         // Initialize  AsyncLogin() class with email and password
+
         new AsyncLogin().execute(email, password);
 
     }
@@ -149,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
 
             //this method will be running on UI thread
-            String first = null, second = null;
+            //first = null, second = null;
             if (result.equalsIgnoreCase("exception")) {
                 first = new String("exception");
             } else {
@@ -180,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.finish();*/
 
                 new AsyncRetrieve(second, MainActivity.this).execute();
-
-
             } else if (first.equalsIgnoreCase("false")) {
 
                 // If username and password does not match display a error message
